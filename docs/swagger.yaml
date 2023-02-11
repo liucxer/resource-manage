@@ -1,0 +1,59 @@
+definitions:
+  protocol.PictureCreateReply:
+    properties:
+      url:
+        type: string
+    type: object
+  protocol.VideoCreateReply:
+    properties:
+      url:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /resource-manage/v1/pictures:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 待上传图片
+        in: formData
+        name: picture
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/protocol.PictureCreateReply'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建图片
+      tags:
+      - 图片
+  /resource-manage/v1/videos:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 待上传视频
+        in: formData
+        name: video
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/protocol.VideoCreateReply'
+      security:
+      - ApiKeyAuth: []
+      summary: 创建视频
+      tags:
+      - 视频
+swagger: "2.0"
