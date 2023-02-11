@@ -12,6 +12,7 @@ func LoggerAccessToFile() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 开始时间
 		startTime := time.Now()
+		referer := c.Request.Referer()
 		// 请求host
 		reqHost := c.Request.Host
 		// 请求方式
@@ -40,6 +41,7 @@ func LoggerAccessToFile() gin.HandlerFunc {
 			"req_method":  reqMethod,
 			"status_code": statusCode,
 			"client_ip":   clientIP,
+			"referer":     referer,
 		}).Info("runtime")
 	}
 }

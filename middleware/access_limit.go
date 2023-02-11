@@ -10,7 +10,7 @@ func AccessLimit(allowHosts []string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if len(allowHosts) != 0 {
 
-			requestHost := ctx.Request.Host
+			requestHost := ctx.Request.Referer()
 			findHost := false
 			for _, host := range allowHosts {
 				if host == requestHost {
