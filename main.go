@@ -19,7 +19,7 @@ func main() {
 	}
 
 	logger.InitLogger(globalConfig.LogPath, globalConfig.AppName)
-	routes.InitRouter(globalConfig.ResourcePath)
+	routes.InitRouter(globalConfig.ResourcePath, globalConfig.ClientIPs)
 	routes.InitResourcePath()
 	err = gins.Run("0.0.0.0:" + strconv.Itoa(int(globalConfig.ListeningPort)))
 	if err != nil {

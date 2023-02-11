@@ -2,10 +2,10 @@
 .idea
 srv-gw-infinity
 /tmp/
-/build/network-disk*
 /test/*
 main_*
 nohup.out
 web
 log
 resource
+build

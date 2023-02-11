@@ -16,7 +16,7 @@ var V1Router = RootRouter.Group("/v1")
 
 var ResourcePath string
 
-func InitRouter(resourcePath string) {
+func InitRouter(resourcePath string, clientIPs []string) {
 	ResourcePath = resourcePath
 
 	ginS.Use(middleware.LoggerAccessToFile())
@@ -38,8 +38,8 @@ func InitRouter(resourcePath string) {
 	ginS.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// 资源
-	ginS.Use(middleware.CORSMiddleware()).StaticFS("/video", http.Dir(ResourcePath+"/video/"))     // 浏览视频
-	ginS.Use(middleware.CORSMiddleware()).StaticFS("/picture", http.Dir(ResourcePath+"/picture/")) // 浏览图片
-	ginS.POST("/resource-manage/v1/videos", VideoCreate)                                           // 上传视频(管理员)
-	ginS.POST("/resource-manage/v1/pictures", PictureCreate)                                       // 上传图片(管理员)
+	ginS.Use(middleware.CORSMiddleware(), middleware.AccessLimit(clientIPs)).StaticFS("/video", http.Dir(ResourcePath+"/video/"))     // 浏览视频
+	ginS.Use(middleware.CORSMiddleware(), middleware.AccessLimit(clientIPs)).StaticFS("/picture", http.Dir(ResourcePath+"/picture/")) // 浏览图片
+	ginS.POST("/resource-manage/v1/videos", VideoCreate)                                                                              // 上传视频(管理员)
+	ginS.POST("/resource-manage/v1/pictures", PictureCreate)                                                                          // 上传图片(管理员)
 }
