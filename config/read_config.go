@@ -12,7 +12,7 @@ type GlobalConfig struct {
 	// 上传文件的资源路径
 	ResourcePath string   `json:"resource_path"`
 	AppName      string   `json:"app_name"`
-	ClientIPs    []string `json:"client_ips"`
+	LimitHosts   []string `json:"limit_hosts"`
 }
 
 func ReadConfig(configFile string) (GlobalConfig, error) {

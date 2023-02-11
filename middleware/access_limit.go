@@ -6,19 +6,19 @@ import (
 	"net/http"
 )
 
-func AccessLimit(allowIPs []string) gin.HandlerFunc {
+func AccessLimit(allowHosts []string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if len(allowIPs) != 0 {
-			clientIP := ctx.ClientIP()
-			findIp := false
+		if len(allowHosts) != 0 {
 
-			for _, ip := range allowIPs {
-				if ip == clientIP {
-					findIp = true
+			requestHost := ctx.Request.Host
+			findHost := false
+			for _, host := range allowHosts {
+				if host == requestHost {
+					findHost = true
 				}
 			}
 
-			if !findIp {
+			if !findHost {
 				_ = ctx.AbortWithError(http.StatusBadRequest, errors.New("access limit"))
 				return
 			}
