@@ -10,8 +10,9 @@ type GlobalConfig struct {
 	LogPath       string `json:"log_path"`
 	ListeningPort int64  `json:"listening_port"`
 	// 上传文件的资源路径
-	FilePath string `json:"file_path"`
-	AppName  string `json:"app_name"`
+	ResourcePath string   `json:"resource_path"`
+	AppName      string   `json:"app_name"`
+	LimitSources []string `json:"limit_sources"`
 }
 
 func ReadConfig(configFile string) (GlobalConfig, error) {
@@ -31,8 +32,8 @@ func ReadConfig(configFile string) (GlobalConfig, error) {
 	if globalConfig.ListeningPort == 0 {
 		globalConfig.ListeningPort = 80
 	}
-	if globalConfig.FilePath == "" {
-		globalConfig.FilePath = "./resource"
+	if globalConfig.ResourcePath == "" {
+		globalConfig.ResourcePath = "./resource"
 	}
 	if globalConfig.LogPath == "" {
 		globalConfig.LogPath = "./log"
@@ -46,7 +47,7 @@ func ReadConfig(configFile string) (GlobalConfig, error) {
 func DefaultGlobalConfig() GlobalConfig {
 	var globalConfig GlobalConfig
 	globalConfig.ListeningPort = 80
-	globalConfig.FilePath = "./resource"
+	globalConfig.ResourcePath = "./resource"
 	globalConfig.LogPath = "./log"
 	globalConfig.AppName = os.Args[0]
 	return globalConfig

@@ -1,6 +1,6 @@
 {
   "log_path": "./log",
   "listening_port": 80,
-  "file_path": "./resource",
+  "resource_path": "./resource",
   "app_name": "resource-manage"
 }

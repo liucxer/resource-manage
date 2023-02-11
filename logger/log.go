@@ -49,8 +49,8 @@ func (mgr *FileMgr) CheckAndCreateDir() error {
 	return nil
 }
 
-// CheckAndCreateFIle 校验并创建文件
-func (mgr *FileMgr) CheckAndCreateFIle() error {
+// CheckAndCreateFile 校验并创建文件
+func (mgr *FileMgr) CheckAndCreateFile() error {
 	//文件不存在
 	if !mgr.isExist() {
 		//递归创建文件夹

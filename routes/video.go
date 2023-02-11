@@ -1,8 +1,10 @@
 package routes
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/liucxer/resource-manage/logger"
 	"github.com/liucxer/resource-manage/protocol"
 	"github.com/sirupsen/logrus"
 	"net/http"
@@ -42,7 +44,7 @@ func VideoCreate(c *gin.Context) {
 
 	fileExt := fileItems[1]
 	uuidStr := uuid.NewString()
-	videoPath := "/var/video/" + uuidStr + "." + fileExt
+	videoPath := ResourcePath + "/video/" + uuidStr + "." + fileExt
 
 	// 上传文件到指定的路径
 	err = c.SaveUploadedFile(video, videoPath)
@@ -51,6 +53,21 @@ func VideoCreate(c *gin.Context) {
 		return
 	}
 
-	reply.Url = "/video/" + uuidStr + "/" + uuidStr + ".m3u8"
+	reply.Url = "/video/" + uuidStr + "." + fileExt
 	c.JSON(http.StatusOK, reply)
+}
+
+func InitResourcePath() {
+	err := logger.NewFileMgr(ResourcePath, "").CheckAndCreateDir()
+	if err != nil {
+		panic(fmt.Sprintf("CheckAndCreateDir %s error. err:%v", ResourcePath, err))
+	}
+	err = logger.NewFileMgr(ResourcePath+"/video", "").CheckAndCreateDir()
+	if err != nil {
+		panic(fmt.Sprintf("CheckAndCreateDir %s error. err:%v", ResourcePath, err))
+	}
+	err = logger.NewFileMgr(ResourcePath+"/picture", "").CheckAndCreateDir()
+	if err != nil {
+		panic(fmt.Sprintf("CheckAndCreateDir %s error. err:%v", ResourcePath, err))
+	}
 }

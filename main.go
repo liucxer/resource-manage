@@ -5,6 +5,7 @@ import (
 	"github.com/liucxer/resource-manage/config"
 	_ "github.com/liucxer/resource-manage/docs"
 	"github.com/liucxer/resource-manage/logger"
+	"github.com/liucxer/resource-manage/routes"
 	_ "github.com/liucxer/resource-manage/routes"
 	"github.com/sirupsen/logrus"
 	"strconv"
@@ -18,6 +19,8 @@ func main() {
 	}
 
 	logger.InitLogger(globalConfig.LogPath, globalConfig.AppName)
+	routes.InitRouter(globalConfig.ResourcePath)
+	routes.InitResourcePath()
 	err = gins.Run("0.0.0.0:" + strconv.Itoa(int(globalConfig.ListeningPort)))
 	if err != nil {
 		logrus.Errorf("gins.Run err:%v", err)

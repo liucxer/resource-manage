@@ -43,7 +43,7 @@ func PictureCreate(c *gin.Context) {
 
 	fileExt := fileItems[1]
 	uuidStr := uuid.NewString()
-	picturePath := "/var/picture/" + uuidStr + "." + fileExt
+	picturePath := ResourcePath + "/picture/" + uuidStr + "." + fileExt
 
 	// 上传文件到指定的路径
 	err = c.SaveUploadedFile(object, picturePath)
@@ -52,6 +52,6 @@ func PictureCreate(c *gin.Context) {
 		return
 	}
 
-	reply.Url = "/picture/" + uuidStr + "/" + uuidStr + "." + fileExt
+	reply.Url = "/picture/" + uuidStr + "." + fileExt
 	c.JSON(http.StatusOK, reply)
 }

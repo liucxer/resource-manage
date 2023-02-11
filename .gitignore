@@ -7,5 +7,5 @@ srv-gw-infinity
 main_*
 nohup.out
 web
-./log
-./resource
+log
+resource

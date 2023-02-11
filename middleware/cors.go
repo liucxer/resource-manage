@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -14,6 +15,8 @@ func CORSMiddleware() gin.HandlerFunc {
 		ctx.Header("Cache-Control", "no-cache")
 		ctx.Writer.Header().Set("Access-Control-Max-Age", "86400")
 
+		origin := ctx.Request.Header
+		fmt.Println(origin)
 		if ctx.Request.Method == http.MethodOptions {
 			ctx.AbortWithStatus(200)
 		} else {
