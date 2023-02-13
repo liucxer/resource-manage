@@ -9,6 +9,7 @@ import (
 	"github.com/liucxer/resource-manage/protocol"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -86,55 +87,61 @@ func InitResourcePath() {
 // @Param video6	formData file false	"待上传视频"
 // @Param video7	formData file false	"待上传视频"
 // @Param video8	formData file false	"待上传视频"
+// @Param video9	formData file false	"待上传视频"
+// @Param video10	formData file false	"待上传视频"
 // @Produce application/json
 // @Success 200 {object} protocol.VideoCreateReply
 // @Router /resource-manage/v1/videos/multipart [post]
 func MultipartVideoCreate(c *gin.Context) {
 	var (
 		reply protocol.MultipartVideoCreateReply
-		err   error
 	)
 
 	contentType := c.ContentType()
 	logrus.Warnf("contentType:%s", contentType)
-	// 获取上传文件
-	video, err := c.FormFile("video1")
-	if err != nil {
-		logrus.Errorf("c.FormFile err:%v", err)
-		c.JSON(http.StatusBadRequest, c.Error(err))
-		return
-	}
-	fileItems := strings.Split(video.Filename, ".")
-	if len(fileItems) != 2 {
-		logrus.Errorf("c.FormFile err:%v", err)
-		c.JSON(http.StatusBadRequest, c.Error(err))
-		return
+	for i := 1; i <= 10; i++ {
+		// 获取上传文件
+		video, err := c.FormFile("video" + strconv.Itoa(i))
+		if err != nil {
+			err = nil
+			continue
+		}
+		if video == nil {
+			continue
+		}
+		fileItems := strings.Split(video.Filename, ".")
+		if len(fileItems) != 2 {
+			logrus.Errorf("c.FormFile err:%v", err)
+			c.JSON(http.StatusBadRequest, c.Error(err))
+			return
+		}
+
+		fileExt := fileItems[1]
+		uuidStr := uuid.NewString()
+		videoPath := ResourcePath + "/video/" + uuidStr + "." + fileExt
+
+		// 上传文件到指定的路径
+		err = c.SaveUploadedFile(video, videoPath)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, c.Error(err))
+			return
+		}
+
+		// 封面获取
+		coverPath := ResourcePath + "/picture/" + uuidStr + ".jpg"
+		cmd := "ffmpeg -i " + videoPath + " -vframes 1 " + coverPath
+		_, err = mgrs.GlobalMgr.SyncExecute(cmd)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, c.Error(err))
+			return
+		}
+
+		reply.Items = append(reply.Items,
+			protocol.Item{
+				Picture: "/picture/" + uuidStr + ".jpg",
+				Video:   "/video/" + uuidStr + "." + fileExt,
+			})
 	}
 
-	fileExt := fileItems[1]
-	uuidStr := uuid.NewString()
-	videoPath := ResourcePath + "/video/" + uuidStr + "." + fileExt
-
-	// 上传文件到指定的路径
-	err = c.SaveUploadedFile(video, videoPath)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, c.Error(err))
-		return
-	}
-
-	// 封面获取
-	coverPath := ResourcePath + "/picture/" + uuidStr + ".jpg"
-	cmd := "ffmpeg -i " + videoPath + " -vframes 1 " + coverPath
-	_, err = mgrs.GlobalMgr.SyncExecute(cmd)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, c.Error(err))
-		return
-	}
-
-	reply.Items = append(reply.Items,
-		protocol.Item{
-			Picture: "/picture/" + uuidStr + ".jpg",
-			Video:   "/video/" + uuidStr + "." + fileExt,
-		})
 	c.JSON(http.StatusOK, reply)
 }
