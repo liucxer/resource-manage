@@ -37,9 +37,13 @@ func InitRouter(resourcePath string, hosts []string) {
 	// swagger
 	ginS.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	ginS.Use(middleware.CORSMiddleware()).Static("/web", "./templates")
 	// 资源
 	ginS.Use(middleware.CORSMiddleware(), middleware.AccessLimit(hosts)).StaticFS("/video", http.Dir(ResourcePath+"/video/"))     // 浏览视频
 	ginS.Use(middleware.CORSMiddleware(), middleware.AccessLimit(hosts)).StaticFS("/picture", http.Dir(ResourcePath+"/picture/")) // 浏览图片
-	ginS.POST("/resource-manage/v1/videos", VideoCreate)                                                                          // 上传视频(管理员)
-	ginS.POST("/resource-manage/v1/pictures", PictureCreate)                                                                      // 上传图片(管理员)
+	ginS.POST("/resource-manage/v1/videos", VideoCreate)
+
+	//ginS.POST("/api/upload/startChunk", StartChunk) // 上传视频(管理员)
+	ginS.POST("/resource-manage/v1/pictures", PictureCreate)
+	ginS.POST("/resource-manage/v1/videos/multipart", MultipartVideoCreate) // 上传图片(管理员)
 }

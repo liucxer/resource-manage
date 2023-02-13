@@ -56,4 +56,53 @@ paths:
       summary: 创建视频
       tags:
       - 视频
+  /resource-manage/v1/videos/multipart:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: 待上传视频
+        in: formData
+        name: video1
+        type: file
+      - description: 待上传视频
+        in: formData
+        name: video2
+        type: file
+      - description: 待上传视频
+        in: formData
+        name: video3
+        type: file
+      - description: 待上传视频
+        in: formData
+        name: video4
+        type: file
+      - description: 待上传视频
+        in: formData
+        name: video5
+        type: file
+      - description: 待上传视频
+        in: formData
+        name: video6
+        type: file
+      - description: 待上传视频
+        in: formData
+        name: video7
+        type: file
+      - description: 待上传视频
+        in: formData
+        name: video8
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/protocol.VideoCreateReply'
+      security:
+      - ApiKeyAuth: []
+      summary: 批量创建视频
+      tags:
+      - 视频
 swagger: "2.0"

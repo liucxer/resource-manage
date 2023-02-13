@@ -75,6 +75,83 @@
                     }
                 }
             }
+        },
+        "/resource-manage/v1/videos/multipart": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "视频"
+                ],
+                "summary": "批量创建视频",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "待上传视频",
+                        "name": "video1",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "待上传视频",
+                        "name": "video2",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "待上传视频",
+                        "name": "video3",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "待上传视频",
+                        "name": "video4",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "待上传视频",
+                        "name": "video5",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "待上传视频",
+                        "name": "video6",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "待上传视频",
+                        "name": "video7",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "待上传视频",
+                        "name": "video8",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/protocol.VideoCreateReply"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
