@@ -59,7 +59,8 @@ func VideoCreate(c *gin.Context) {
 	c.JSON(http.StatusOK, reply)
 }
 
-func InitResourcePath() {
+func InitResourcePath(resourcePath string) {
+	ResourcePath = resourcePath
 	err := logger.NewFileMgr(ResourcePath, "").CheckAndCreateDir()
 	if err != nil {
 		panic(fmt.Sprintf("CheckAndCreateDir %s error. err:%v", ResourcePath, err))

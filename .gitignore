@@ -1,6 +1,6 @@
 .DS_Store
 .idea
-srv-gw-infinity
+resource-manage
 /tmp/
 /test/*
 main_*
