@@ -1,6 +1,1 @@
-{
-  "log_path": "./log",
-  "listening_port": 80,
-  "resource_path": "./resource",
-  "app_name": "resource-manage"
-}
+{"log_path":"/Users/liuchangxi/Documents/gopath/src/github.com/liucxer/resource-manage/log","listening_port":80,"resource_path":"/Users/liuchangxi/Documents/gopath/src/github.com/liucxer/resource-manage/resource","web_path":"/Users/liuchangxi/Documents/gopath/src/github.com/liucxer/resource-manage/web/","app_name":"resource-manage","limit_hosts":["aa","vbvv","ddd"],"enable_limit_host":true}

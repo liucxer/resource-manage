@@ -8,20 +8,22 @@ import (
 	"github.com/liucxer/resource-manage/routes"
 	_ "github.com/liucxer/resource-manage/routes"
 	"github.com/sirupsen/logrus"
+	"os"
 	"strconv"
 )
 
 func main() {
 	var err error
-	globalConfig, err := config.ReadConfig("./config.json")
+
+	config.G_GlobalConfig, err = config.ReadConfig(os.Args[1])
 	if err != nil {
 		logrus.Warnf("config.ReadConfig err:%v, path:%s, use default config", err, "./config.json")
 	}
 
-	logger.InitLogger(globalConfig.LogPath, globalConfig.AppName)
-	routes.InitRouter(globalConfig.ResourcePath, globalConfig.LimitHosts)
+	logger.InitLogger(config.G_GlobalConfig.LogPath, config.G_GlobalConfig.AppName)
+	routes.InitRouter(config.G_GlobalConfig.ResourcePath)
 	routes.InitResourcePath()
-	err = gins.Run("0.0.0.0:" + strconv.Itoa(int(globalConfig.ListeningPort)))
+	err = gins.Run("0.0.0.0:" + strconv.Itoa(int(config.G_GlobalConfig.ListeningPort)))
 	if err != nil {
 		logrus.Errorf("gins.Run err:%v", err)
 		panic(err)

@@ -3,9 +3,8 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/ginS"
+	"github.com/liucxer/resource-manage/config"
 	"github.com/liucxer/resource-manage/middleware"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 	"net/http/pprof"
 )
@@ -16,10 +15,11 @@ var V1Router = RootRouter.Group("/v1")
 
 var ResourcePath string
 
-func InitRouter(resourcePath string, hosts []string) {
+func InitRouter(resourcePath string) {
 	ResourcePath = resourcePath
 
 	ginS.Use(middleware.LoggerAccessToFile())
+	ginS.Use(middleware.CORSMiddleware()).Static("/c6a16d2b-681e-4cea-934b-b22d08d92416", config.G_GlobalConfig.WebPath)
 	// pprof
 	ginS.GET("/debug/pprof/", gin.WrapF(pprof.Index))
 	ginS.GET("/debug/pprof/cmdline", gin.WrapF(pprof.Cmdline))
@@ -35,15 +35,16 @@ func InitRouter(resourcePath string, hosts []string) {
 	ginS.GET("/debug/pprof/threadcreate", gin.WrapH(pprof.Handler("threadcreate")))
 
 	// swagger
-	ginS.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	ginS.Use(middleware.CORSMiddleware()).Static("/web", "./templates")
-	// 资源
-	ginS.Use(middleware.CORSMiddleware(), middleware.AccessLimit(hosts)).StaticFS("/video", http.Dir(ResourcePath+"/video/"))     // 浏览视频
-	ginS.Use(middleware.CORSMiddleware(), middleware.AccessLimit(hosts)).StaticFS("/picture", http.Dir(ResourcePath+"/picture/")) // 浏览图片
-	ginS.POST("/resource-manage/v1/videos", VideoCreate)
+	//ginS.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	//ginS.POST("/api/upload/startChunk", StartChunk) // 上传视频(管理员)
 	ginS.POST("/resource-manage/v1/pictures", PictureCreate)
 	ginS.POST("/resource-manage/v1/videos/multipart", MultipartVideoCreate) // 上传图片(管理员)
+	ginS.POST("/resource-manage/v1/limit-host", SetLimitHost)               // 设置host访问限制配置
+	ginS.GET("/resource-manage/v1/limit-host", GetLimitHost)                // 获取host访问限制配置
+
+	// 资源
+	ginS.Use(middleware.CORSMiddleware(), middleware.AccessLimit()).StaticFS("/video", http.Dir(ResourcePath+"/video/"))     // 浏览视频
+	ginS.Use(middleware.CORSMiddleware(), middleware.AccessLimit()).StaticFS("/picture", http.Dir(ResourcePath+"/picture/")) // 浏览图片
+	ginS.POST("/resource-manage/v1/videos", VideoCreate)
 }
