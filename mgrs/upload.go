@@ -51,14 +51,6 @@ func (mgr *Mgr) Upload(path string) ([]Result, error) {
 			return []Result{}, err
 		}
 
-		// 生成封面
-		coverPath := config.G_GlobalConfig.ResourcePath + "/picture/" + md5Str + ".jpg"
-		cmd := "ffmpeg -i " + filePath + " -vframes 1 " + coverPath
-		_, err = mgr.SyncExecute(cmd)
-		if err != nil {
-			return []Result{}, err
-		}
-
 		// 文件迁移
 		bts, err := ioutil.ReadFile(filePath)
 		if err != nil {
@@ -72,6 +64,14 @@ func (mgr *Mgr) Upload(path string) ([]Result, error) {
 		fileExt := fileItems[len(fileItems)-1]
 		videoPath := config.G_GlobalConfig.ResourcePath + "/video/" + md5Str + "." + fileExt
 		err = ioutil.WriteFile(videoPath, bts, os.ModePerm)
+		if err != nil {
+			return []Result{}, err
+		}
+
+		// 生成封面
+		coverPath := config.G_GlobalConfig.ResourcePath + "/picture/" + md5Str + ".jpg"
+		cmd := "ffmpeg -i " + videoPath + " -vframes 1 " + coverPath
+		_, err = mgr.SyncExecute(cmd)
 		if err != nil {
 			return []Result{}, err
 		}
